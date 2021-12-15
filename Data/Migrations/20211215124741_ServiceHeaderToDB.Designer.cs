@@ -4,14 +4,16 @@ using CarService.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CarService.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211215124741_ServiceHeaderToDB")]
+    partial class ServiceHeaderToDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -58,34 +60,6 @@ namespace CarService.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Car");
-                });
-
-            modelBuilder.Entity("CarService.Models.ServiceDetails", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ServiceHeaderId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ServiceName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("ServicePrice")
-                        .HasColumnType("float");
-
-                    b.Property<int>("ServiceTypeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ServiceHeaderId");
-
-                    b.HasIndex("ServiceTypeId");
-
-                    b.ToTable("ServiceDetails");
                 });
 
             modelBuilder.Entity("CarService.Models.ServiceHeader", b =>
@@ -390,25 +364,6 @@ namespace CarService.Data.Migrations
                         .HasForeignKey("UserId");
 
                     b.Navigation("ApplicationUser");
-                });
-
-            modelBuilder.Entity("CarService.Models.ServiceDetails", b =>
-                {
-                    b.HasOne("CarService.Models.ServiceHeader", "ServiceHeader")
-                        .WithMany()
-                        .HasForeignKey("ServiceHeaderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CarService.Models.ServiceType", "ServiceType")
-                        .WithMany()
-                        .HasForeignKey("ServiceTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ServiceHeader");
-
-                    b.Navigation("ServiceType");
                 });
 
             modelBuilder.Entity("CarService.Models.ServiceHeader", b =>
