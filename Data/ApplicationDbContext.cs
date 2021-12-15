@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using CarService.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,5 +13,12 @@ namespace CarService.Data
             : base(options)
         {
         }
+
+        public DbSet<ServiceType> ServiceType { get; set; }
+        public DbSet<ApplicationUser> ApplicationUser { get; set; }
+        public DbSet<Car> Car { get; set; }
+        public DbSet<ServiceShoppingCart> ServiceShoppingCart { get; set; }
+        public DbSet<ServiceHeader> ServiceHeader { get; set; }
+        public DbSet<ServiceDetails> ServiceDetails { get; set; }
     }
 }
