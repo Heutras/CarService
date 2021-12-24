@@ -1,0 +1,71 @@
+﻿@model CarService.Models.ServiceType
+@{
+    ViewData["Title"] = "Index";
+    
+}
+
+<br />
+<br />
+<div class="border backgroundWhite">
+    <div class="row">
+        <div class="col-12"><p> </p></div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <h2 class="text-info offset-1">Service Type List</h2>
+        </div>
+        <div class="offset-4">
+            <a asp-action="Create" class="btn btn-info">
+                <i class="fas fa-plus"></i>&nbsp; Create New
+            </a>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        @if (Model.ServiceType.Count == 0)
+        {
+            <p>Hiç servis tipi yok</p>
+        }
+        else
+        {
+            <table class="table table-striped border col-8 offset-2">
+
+                <tr class="table-secondary">
+                    <th>
+                        @Html.DisplayNameFor(m => m.ServiceType[0].Name)
+                    </th>
+                    <th class="text-left">
+                        @Html.DisplayNameFor(m => m.ServiceType[0].Price)
+                    </th>
+                    <th></th>
+                </tr>
+                @foreach (var item in Model.ServiceType)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(m => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => item.Price)
+                        </td>
+
+                        <td style="width:150px;">
+                            <div class="btn-group" role="group">
+                                <a class="btn btn-primary text-white" asp-action="Edit" asp-route-Id="@item.Id">
+                                    <i class="far fa-edit"></i>
+                                </a>
+                                <a class="btn btn-success text-white" asp-action="Details" asp-route-Id="@item.Id">
+                                    <i class="fas fa-list-ul"></i>
+                                </a>
+                                <a class="btn btn-danger text-white" asp-action="Delete" asp-route-Id="@item.Id">
+                                    <i class="far fa-trash-alt"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                 }
+
+            </table>
+        }
+    </div>
+</div>

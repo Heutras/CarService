@@ -18,10 +18,4 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\deneme\" />
-    <Folder Include="Views\Services\" />
-    <Folder Include="Views\ServiceType\" />
-  </ItemGroup>
-
 </Project>
