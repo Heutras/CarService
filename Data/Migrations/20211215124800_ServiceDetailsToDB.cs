@@ -48,7 +48,7 @@ namespace CarService.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ServiceDetails");
+               name: "ServiceDetails");
         }
     }
 }

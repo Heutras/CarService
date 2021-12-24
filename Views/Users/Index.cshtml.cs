@@ -84,7 +84,11 @@ namespace CarService.Pages.Users
                 .Skip((productPage - 1) * SD.PaginationUsersPageSize) // ilk sayfada kayýt atlamýyoruz sonraki sayfalarda sayfada gösterinlen * sayfa sayýsý-1 kadar atlýyoruz
                 .Take(SD.PaginationUsersPageSize).ToList();
 
+            ViewData["VM"] = UsersListVM;
             return Page();
+            
         }
+
+
     }
 }

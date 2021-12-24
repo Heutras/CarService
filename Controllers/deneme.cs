@@ -1,48 +1,51 @@
+﻿using CarService.Data;
+using CarService.Models;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using CarService.Data;
-using CarService.Models;
 using CarService.Models.ViewModel;
 using CarService.Utility;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 
-namespace CarService.Pages.Services
+namespace CarService.Controllers
 {
-    [Authorize(Roles = SD.AdminEndUser)]
-    public class CreateModel : PageModel
+    public class deneme : Controller
     {
-        private readonly ApplicationDbContext _db;
-
-        [BindProperty]
-        public CarServiceViewModel CarServiceVM { get; set; }
-
-        public CreateModel(ApplicationDbContext db)
+        //[Authorize(Roles = SD.AdminEndUser)]
+        public readonly ApplicationDbContext _db;
+        public deneme(ApplicationDbContext db)
         {
             _db = db;
         }
+        public CarServiceViewModel CarServiceVM { get; set; }
+        public ServiceHeader serviceHeader { get; set; }
+        public List<ServiceHeader> ServiceHeader { get; set; }
+        public List<ServiceDetails> serviceDetails { get; set; }
+        public string UserId { get; set; }
 
-        public async Task<IActionResult> OnGet(int carId)
+        //Get - Create
+        public IActionResult Create(int carId)
         {
             CarServiceVM = new CarServiceViewModel
             {
-                Car = await _db.Car.Include(c => c.ApplicationUser).FirstOrDefaultAsync(c => c.Id == carId),
-                ServiceHeader = new Models.ServiceHeader()
+                Car = _db.Car.Include(c => c.ApplicationUser).FirstOrDefault(c => c.Id == carId),
+                ServiceHeader = new ServiceHeader()
+
             };
 
-            List<String> lstServiceTypeInShoppingCart = _db.ServiceShoppingCart
+            List<String> lstServiceTypeInShoppingCart = _db.ServiceShoppingCart.AsQueryable()
                                                             .Include(c => c.ServiceType)
                                                             .Where(c => c.CarId == carId)
                                                             .Select(c => c.ServiceType.Name)
                                                             .ToList();
 
-            IQueryable<ServiceType> lstService = from s in _db.ServiceType
-                                                 where !(lstServiceTypeInShoppingCart.Contains(s.Name))
-                                                 select s;
+            IQueryable<Models.ServiceType> lstService = (from s in _db.ServiceType
+                                                         where !(lstServiceTypeInShoppingCart.Contains(s.Name))
+                                                         select s);
 
             CarServiceVM.ServiceTypesList = lstService.ToList();
 
@@ -53,12 +56,13 @@ namespace CarService.Pages.Services
             {
                 CarServiceVM.ServiceHeader.TotalPrice += item.ServiceType.Price;
             }
-
-            return Page();
-
+            
+            return View(CarServiceVM);
         }
-
-        public async Task<IActionResult> OnPostAsync()
+        //Post - Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(CarServiceViewModel CarServiceVM)
         {
             if (ModelState.IsValid)
             {
@@ -71,7 +75,7 @@ namespace CarService.Pages.Services
                 CarServiceVM.ServiceHeader.CarId = CarServiceVM.Car.Id;
 
                 _db.ServiceHeader.Add(CarServiceVM.ServiceHeader);
-                await _db.SaveChangesAsync();
+                _db.SaveChanges();
 
                 foreach (var detail in CarServiceVM.ServiceShoppingCart)
                 {
@@ -88,15 +92,14 @@ namespace CarService.Pages.Services
                 }
                 _db.ServiceShoppingCart.RemoveRange(CarServiceVM.ServiceShoppingCart);
 
-                await _db.SaveChangesAsync();
+                _db.SaveChanges();
 
-                return RedirectToPage("../Cars/Index", new { userId = CarServiceVM.Car.UserId });
+                return RedirectToAction("Index", "Cars", new { @userId = CarServiceVM.Car.UserId });
             }
 
-            return Page();
+            return View();
         }
-
-        public async Task<IActionResult> OnPostAddToCart()
+        public IActionResult Cart()
         {
             ServiceShoppingCart objServiceCart = new ServiceShoppingCart()
             {
@@ -105,19 +108,31 @@ namespace CarService.Pages.Services
             };
 
             _db.ServiceShoppingCart.Add(objServiceCart);
-            await _db.SaveChangesAsync();
-            return RedirectToPage("Create", new { carId = CarServiceVM.Car.Id });
+            _db.SaveChanges();
+            return RedirectToAction("Create", new { carId = CarServiceVM.Car.Id });
         }
-
-        public async Task<IActionResult> OnPostRemoveFromCart(int serviceTypeId)
+        public IActionResult Cart(int serviceTypeId)
         {
             ServiceShoppingCart objServiceCart = _db.ServiceShoppingCart
                 .FirstOrDefault(u => u.CarId == CarServiceVM.Car.Id && u.ServiceTypeId == serviceTypeId);
 
-
             _db.ServiceShoppingCart.Remove(objServiceCart);
-            await _db.SaveChangesAsync();
-            return RedirectToPage("Create", new { carId = CarServiceVM.Car.Id });
+            _db.SaveChanges();
+            return RedirectToAction("Create", new { carId = CarServiceVM.Car.Id });
+        }
+        public IActionResult Details(int serviceId)
+        {
+            serviceHeader = _db.ServiceHeader.Include(s => s.Car).Include(s => s.Car.ApplicationUser).FirstOrDefault(s => s.Id == serviceId);
+            serviceDetails = _db.ServiceDetails.Where(s => s.ServiceHeaderId == serviceId).ToList();
+            return View();
+
+        }
+        public IActionResult History(int carId)
+        {
+            ServiceHeader = _db.ServiceHeader.Include(s => s.Car).Include(c => c.Car.ApplicationUser).Where(c => c.CarId == carId).ToList();
+
+            UserId = _db.Car.Where(u => u.Id == carId).ToList().FirstOrDefault().UserId;
+            return View(ServiceHeader);
         }
     }
 }

@@ -7,11 +7,13 @@ namespace CarService.Data.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "ServiceDetails");
+
 
             migrationBuilder.DropTable(
                 name: "ServiceShoppingCart");
+
+            migrationBuilder.DropTable(
+                name: "ServiceDetails");
 
             migrationBuilder.DropTable(
                 name: "ServiceHeader");

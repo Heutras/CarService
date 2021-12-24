@@ -4,6 +4,7 @@ namespace CarService.Models
 {
     public class ServiceShoppingCart
     {
+
         public int Id { get; set; }
         public int CarId { get; set; }
         public int ServiceTypeId { get; set; }

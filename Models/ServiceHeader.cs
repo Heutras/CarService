@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -20,5 +21,10 @@ namespace CarService.Models
 
         [ForeignKey("CarId")]
         public virtual Car Car { get; set; }
+
+        public static explicit operator List<object>(ServiceHeader v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

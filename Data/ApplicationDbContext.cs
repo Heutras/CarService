@@ -17,5 +17,10 @@ namespace CarService.Data
         public DbSet<ServiceShoppingCart> ServiceShoppingCart { get; set; }
         public DbSet<ServiceHeader> ServiceHeader { get; set; }
         public DbSet<ServiceDetails> ServiceDetails { get; set; }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+        }
     }
+    
 }

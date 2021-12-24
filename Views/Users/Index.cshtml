@@ -1,9 +1,9 @@
-﻿@page
+﻿
 @model CarService.Pages.Users.IndexModel
 @{
 }
 
-<form method="get" asp-page="Index">
+<form method="get" asp-controller="Cars" asp-action="Index">
     <br /><br />
     <div class="row">
         <div class="col-6">
@@ -73,15 +73,15 @@
                             @Html.DisplayFor(m => item.Email)
                         </td>
                         <td>
-                            <a asp-page="../Cars/Index" asp-route-userId="@item.Id" style="text-decoration:none;">
+                            <a asp-controller="Cars" asp-action="Index" asp-route-userId="@item.Id" style="text-decoration:none;">
                                 <img src="~/images/car.png" width="40" /> &nbsp; Araçları Göster
                             </a>
                         </td>
                         <td>
-                            <a class="btn btn-primary text-white" asp-page="Edit" asp-route-Id="@item.Id">
+                            <a class="btn btn-primary text-white" asp-controller="Cars" asp-action="Edit" asp-route-Id="@item.Id">
                                 <i class="far fa-edit"></i>
                             </a>
-                            <a class="btn btn-danger text-white" asp-page="Delete" asp-route-Id="@item.Id">
+                            <a class="btn btn-danger text-white" asp-controller="Cars" asp-action="Delete" asp-route-Id="@item.Id">
                                 <i class="far fa-trash-alt"></i>
                             </a>
                         </td>

@@ -19,7 +19,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Identity\Pages\Account\" />
+    <Folder Include="Views\deneme\" />
+    <Folder Include="Views\Services\" />
+    <Folder Include="Views\ServiceType\" />
   </ItemGroup>
 
 </Project>
